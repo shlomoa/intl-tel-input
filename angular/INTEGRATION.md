@@ -14,7 +14,7 @@ Inside this repository, the demos import from `angular/src/*` because they are b
 | `intl-tel-input/angularWithUtils` | You want the simplest integration and you need validation immediately | Included automatically |
 | `intl-tel-input/angular` | You want the lighter component entry and do not need utils up front | Not available unless you also provide `loadUtils` |
 
-> All current Angular demos in `/home/runner/work/intl-tel-input/intl-tel-input/angular/demo` use the **with-utils** entry point.
+> All current Angular demos in `angular/demo` use the **with-utils** entry point.
 
 ## 1. Install the package
 
@@ -55,7 +55,7 @@ import "intl-tel-input/styles";
 
 ## What the repo demos import that your app may already have
 
-Each demo `main.ts` in `/home/runner/work/intl-tel-input/intl-tel-input/angular/demo/*/main.ts` imports:
+Each demo `main.ts` in `angular/demo/*/main.ts` imports:
 
 - `zone.js`
 - `@angular/compiler`
@@ -71,11 +71,11 @@ The Angular component is standalone, so import it directly into your standalone 
 
 This matches the repo demos:
 
-- `/home/runner/work/intl-tel-input/intl-tel-input/angular/demo/simple/simple.component.ts`
-- `/home/runner/work/intl-tel-input/intl-tel-input/angular/demo/validation/validation.component.ts`
-- `/home/runner/work/intl-tel-input/intl-tel-input/angular/demo/form/form.component.ts`
-- `/home/runner/work/intl-tel-input/intl-tel-input/angular/demo/set-number/set-number.component.ts`
-- `/home/runner/work/intl-tel-input/intl-tel-input/angular/demo/toggle-disabled/toggle-disabled.component.ts`
+- `angular/demo/simple/simple.component.ts`
+- `angular/demo/validation/validation.component.ts`
+- `angular/demo/form/form.component.ts`
+- `angular/demo/set-number/set-number.component.ts`
+- `angular/demo/toggle-disabled/toggle-disabled.component.ts`
 
 ```ts
 import { Component } from "@angular/core";
@@ -190,7 +190,7 @@ loadUtils = () => import("intl-tel-input/utils");
 
 ## Inputs and outputs you will use most often
 
-The component in `/home/runner/work/intl-tel-input/intl-tel-input/angular/src/IntlTelInput.ts` exposes:
+The component in `angular/src/IntlTelInput.ts` exposes:
 
 - form integration via `ControlValueAccessor`
 - validation via `Validator`
