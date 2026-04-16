@@ -6,7 +6,7 @@ It covers:
 
 - the Angular package outputs in `angular/dist`
 - the Angular demos in `angular/demo`
-- the shared root build steps that Angular depends on
+- the shared root build steps that Angular directly depends on
 
 For day-to-day Angular package work inside this repository, start with:
 
@@ -45,8 +45,8 @@ Both are compiled together by `ngc -p angular/tsconfig.json` and then bundled by
 
 | Goal | Command | Notes |
 | --- | --- | --- |
-| Build everything published by the repo | `npm run build` | Full production build, including images, CSS, core JS, and framework components |
-| Build the core JS package and all framework components | `npm run build:js` | Smallest reliable command that also produces the Angular package outputs |
+| Build the shared JS prerequisites Angular needs | `npm run build:js:dts && npm run build:utils:closure && npm run build:js:core` | Produces the `dist/js/*` files imported by `angular/src/*` and `angular/build.js` |
+| Build the shared CSS/assets used by the Angular demos | `npm run build:img` | Produces the flag images, CSS metadata, published CSS, and `demo/dist/demo.css` used by the Angular demo HTML pages |
 | Rebuild only the Angular package and Angular demos | `npm run build:angular` | Works only after the required core JS files already exist in `dist/js/` |
 | Watch Angular source and demo files | `npm run watch` | `scripts/watch.js` reruns `build:angular` when `angular/src` or `angular/demo` changes |
 
@@ -62,7 +62,7 @@ Both are compiled together by `ngc -p angular/tsconfig.json` and then bundled by
 | Check libphonenumber metadata drift | `third_party/libphonenumber/resources/PhoneNumberMetadata.xml`, `src/js/data.ts` | `tmp/generated-rawCountryData.ts` | `build:utils:check` | `npm run build:utils:check` | Implemented by `scripts/check-lpn-metadata.js`; exits non-zero when curated country data needs manual review |
 | Build and verify utils together | same as previous two rows | `dist/js/utils.js`, `tmp/generated-rawCountryData.ts` | `build:utils` | `npm run build:utils` | Convenience wrapper: `clean:utils` → `build:utils:closure` → `build:utils:check` |
 | Build root JS bundles needed by Angular | `src/js/intl-tel-input.ts`, `src/js/intlTelInputWithUtils.ts`, `src/js/data.ts`, `src/js/i18n/**/*.ts`, `dist/js/utils.js` | `dist/js/intlTelInput.js`, `dist/js/intlTelInput.min.js`, `dist/js/intlTelInput.mjs`, `dist/js/intlTelInputWithUtils.js`, `dist/js/intlTelInputWithUtils.min.js`, `dist/js/intlTelInputWithUtils.mjs`, `dist/js/data.js`, `dist/js/data.min.js`, `dist/js/data.mjs`, `dist/js/i18n/**` | `build:js:core` | `npm run build:js:core` | Implemented by `scripts/esbuild.js`; Angular packaging depends on `dist/js/intlTelInput.mjs` existing |
-| Generate flag sprite metadata and images | `src/js/data.ts`, `node_modules/flag-icons/flags/4x3/**` | `src/css/_metadata.scss`, `dist/img/flags.webp`, `dist/img/flags@2x.webp`, `dist/img/flags.png`, `dist/img/flags@2x.png` | `build:img:sprite` | `npm run build:img:sprite` | Implemented by `scripts/generate-sprite.js`; shared by all framework demos through the CSS |
+| Generate flag sprite metadata and images | `src/js/data.ts`, `node_modules/flag-icons/flags/4x3/**` | `src/css/_metadata.scss`, `dist/img/flags.webp`, `dist/img/flags@2x.webp`, `dist/img/flags.png`, `dist/img/flags@2x.png` | `build:img:sprite` | `npm run build:img:sprite` | Implemented by `scripts/generate-sprite.js`; the Angular demos consume these assets through the shared CSS |
 | Build package CSS | `src/css/intlTelInput.scss`, `src/css/intlTelInputWithAssets.scss`, `src/css/_metadata.scss` | `dist/css/intlTelInput-no-assets.css`, `dist/css/intlTelInput.css` | `build:css:main` | `npm run build:css:main` | Generates the published stylesheets |
 | Build demo CSS | `demo/src/demo.scss`, `src/css/intlTelInputWithAssets.scss`, `src/css/_metadata.scss`, Bootstrap SCSS | `demo/dist/demo.css` | `build:css:demo` | `npm run build:css:demo` | Angular demo HTML files all reference `../../../demo/dist/demo.css` |
 | Minify package CSS | `dist/css/intlTelInput.css`, `dist/css/intlTelInput-no-assets.css` | `dist/css/intlTelInput.min.css`, `dist/css/intlTelInput-no-assets.min.css` | `build:css:min` | `npm run build:css:min` | Final CSS minification step |
@@ -72,8 +72,6 @@ Both are compiled together by `ngc -p angular/tsconfig.json` and then bundled by
 | Bundle Angular package outputs | `angular/dist/temp/IntlTelInput.js`, `angular/dist/temp/IntlTelInputWithUtils.js` | `angular/dist/IntlTelInput.js`, `angular/dist/IntlTelInputWithUtils.js` | part of `build:angular` | `node angular/build.js` | `angular/build.js` removes `angular/dist/temp` after bundling |
 | Bundle Angular demos | `angular/demo/*/main.ts`, each demo component, Angular runtime imports | `angular/demo/simple/simple-bundle.js`, `angular/demo/validation/validation-bundle.js`, `angular/demo/set-number/set-number-bundle.js`, `angular/demo/toggle-disabled/toggle-disabled-bundle.js`, `angular/demo/form/form-bundle.js` | part of `build:angular` | `node angular/build.js` | Each demo `index.html` file loads its matching bundle |
 | Build Angular package and demos | Angular sources + root JS declarations + root JS runtime bundles | `angular/dist/**`, `angular/demo/*/*-bundle.js` | `build:angular` | `npm run build:angular` | Actual script is `ensure:dts && clean:angular && ngc -p angular/tsconfig.json && node angular/build.js`; on a fresh clone you still need the root JS bundles first |
-| Build all framework components | root JS bundles + framework source folders | `react/dist/**`, `vue/dist/**`, `angular/dist/**` | `build:components` | `npm run build:components` | Wrapper for React, Vue, and Angular component builds |
-| Build JS package plus framework components | root JS sources, utils, declarations, framework source folders | `dist/js/**`, `react/dist/**`, `vue/dist/**`, `angular/dist/**` | `build:js` | `npm run build:js` | This is the smallest end-to-end build path that reliably produces Angular outputs |
 
 ## Minimal files required to build
 
@@ -128,6 +126,26 @@ Both are compiled together by `ngc -p angular/tsconfig.json` and then bundled by
 | `node_modules/esbuild/package.json` | `scripts/esbuild.js`, `angular/build.js` | npm package install | external |
 | `node_modules/sass/package.json` | `npm run build:css:main`, `npm run build:css:demo` | npm package install | external |
 | `node_modules/sharp/package.json` | `scripts/generate-sprite.js` | npm package install | external |
+
+## Minimal fresh-clone Angular build sequence
+
+If you want the smallest Angular-focused sequence from a fresh clone, use:
+
+```sh
+git submodule update --init --recursive
+npm install
+npm run build:js:dts
+npm run build:utils:closure
+npm run build:js:core
+npm run build:img
+npm run build:angular
+```
+
+Notes:
+
+- `build:js:dts`, `build:utils:closure`, and `build:js:core` produce the shared `dist/js/*` files the Angular sources import.
+- `build:img` is only needed if you want the Angular demo pages to have their shared CSS and flag assets ready.
+- `build:utils:check` is intentionally omitted here because it is a maintainer verification step and can fail when curated metadata needs review.
 
 ## What actually builds `IntlTelInput` vs `IntlTelInputWithUtils`
 
