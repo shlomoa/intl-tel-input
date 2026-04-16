@@ -26,7 +26,7 @@ npm install intl-tel-input
 
 The component renders global `.iti*` classes, so load the stylesheet once for the whole app.
 
-For an Angular Material workspace, the safest option is to add it to `angular.json`:
+For an Angular Material workspace, the **preferred** option is to add it to `angular.json`:
 
 ```json
 {
@@ -47,7 +47,7 @@ For an Angular Material workspace, the safest option is to add it to `angular.js
 }
 ```
 
-You can also import it in `src/main.ts`:
+If you prefer a code import instead of the Angular workspace `styles` array, you can also import the same published stylesheet in `src/main.ts`:
 
 ```ts
 import "intl-tel-input/styles";

@@ -8,6 +8,14 @@ It covers:
 - the Angular demos in `angular/demo`
 - the shared root build steps that Angular depends on
 
+For day-to-day Angular package work inside this repository, start with:
+
+```sh
+npm run watch
+```
+
+That watcher is implemented in `scripts/watch.js` and rebuilds Angular whenever files in `angular/src` or `angular/demo` change.
+
 ## Fresh clone bootstrap
 
 From a fresh clone, run these first:
