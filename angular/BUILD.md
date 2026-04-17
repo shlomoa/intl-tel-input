@@ -194,7 +194,7 @@ This is the Angular-focused dependency map using the step names documented earli
 | `sass` | shared CSS generation required by the Angular demos | dev dependency |
 | `clean-css-cli` | shared CSS minification required by the Angular demos | dev dependency |
 | `sharp` | shared sprite generation required by the Angular demos | dev dependency |
-| `bootstrap` | shared demo stylesheet generation used by the Angular demos | dev dependency |
+| `bootstrap` | shared demo stylesheet build-time input for the Angular demos | dev dependency |
 | `rimraf` | clean steps invoked by the shared Angular prerequisite builds and `npm run build:angular` | dev dependency |
 | `@angular/compiler-cli` | `npm run build:angular` | dev dependency |
 | `@angular/compiler` | `npm run build:angular` | dev dependency |
