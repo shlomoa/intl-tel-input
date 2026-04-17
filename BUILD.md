@@ -92,6 +92,7 @@ The submodule step is required for `third_party/libphonenumber`, which is used w
 
 ### Runtime dependencies
 
+The root package currently has no runtime npm dependencies.
+
 | name | where | type |
 | --- | --- | --- |
-| None | The root package publishes standalone JS and CSS assets and declares no npm `dependencies` in `package.json` | N/A |
