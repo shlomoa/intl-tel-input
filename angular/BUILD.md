@@ -198,12 +198,12 @@ This is the Angular-focused dependency map using the step names from the `purpos
 | `rimraf` | clean steps invoked by the shared Angular prerequisite builds and `npm run build:angular` | dev dependency |
 | `@angular/compiler-cli` | `npm run build:angular` | dev dependency |
 | `@angular/compiler` | `npm run build:angular` | dev dependency |
+| `@angular/platform-browser` | Angular demo bootstrap files built by `npm run build:angular` | dev dependency |
+| `zone.js` | Angular demo bootstrap files built by `npm run build:angular` | dev dependency |
 
 ### Runtime dependencies
 
 | name | where | type |
 | --- | --- | --- |
-| `@angular/core` | `angular/src/IntlTelInput.ts`, `angular/demo/simple/simple.component.ts`, `angular/demo/validation/validation.component.ts`, `angular/demo/toggle-disabled/toggle-disabled.component.ts`, `angular/demo/set-number/set-number.component.ts`, `angular/demo/form/form.component.ts` | runtime dependency |
+| `@angular/core` | Angular component source and Angular demo component files | runtime dependency |
 | `@angular/forms` | `angular/src/IntlTelInput.ts`, `angular/demo/form/form.component.ts` | runtime dependency |
-| `@angular/platform-browser` | Angular demo `main.ts` files | runtime dependency |
-| `zone.js` | Angular demo `main.ts` files | runtime dependency |
