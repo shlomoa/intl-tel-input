@@ -1,0 +1,9 @@
+{
+  "name": "@intl-tel-input/build-angular-package",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.js",
+    "validate": "node build.js"
+  }
+}
