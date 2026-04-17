@@ -54,7 +54,7 @@ Both are compiled together by `ngc -p angular/tsconfig.json` and then bundled by
 
 | purpose | input | output | script | command | details |
 | --- | --- | --- | --- | --- | --- |
-| Initialise external sources | `.gitmodules`, remote `google/libphonenumber` repo | `third_party/libphonenumber/**` | n/a | `git submodule update --init --recursive` | Required before any utils build that reads libphonenumber files |
+| Initialize external sources | `.gitmodules`, remote `google/libphonenumber` repo | `third_party/libphonenumber/**` | n/a | `git submodule update --init --recursive` | Required before any utils build that reads libphonenumber files |
 | Install toolchain dependencies | `package.json`, `package-lock.json` | `node_modules/**` | n/a | `npm install` | Installs Angular, esbuild, sass, flag-icons, Closure Compiler, etc. |
 | Generate root TypeScript declarations | `src/js/intl-tel-input.ts`, `src/js/data.ts`, `src/js/i18n/index.ts`, `src/js/types/utils.d.ts`, `tsconfig.json` | `dist/js/intlTelInput.d.ts`, `dist/js/data.d.ts`, `dist/js/i18n.d.ts`, `dist/js/utils.d.ts` | `build:js:dts` | `npm run build:js:dts` | Implemented by `scripts/build-dts.js`; also used indirectly by `ensure:dts` |
 | Ensure root declarations exist | `dist/js/intlTelInput.d.ts` | existing or regenerated `dist/js/intlTelInput.d.ts` | `ensure:dts` | `npm run ensure:dts` | `build:angular` calls this first, but it does **not** build `dist/js/intlTelInput.mjs` |
@@ -164,3 +164,46 @@ There is no separate npm script per Angular entry point. The split is defined by
   - consumer import: `intl-tel-input/angularWithUtils`
 
 So the Angular build always produces both files together; the difference is in the entry source and the runtime dependencies each one bundles.
+
+## Angular build step dependencies
+
+This is the Angular-focused dependency map using the step names documented earlier in this guide. Some steps need more than one prerequisite, so `depends on` may list multiple IDs.
+
+| ID | step | depends on |
+| --- | --- | --- |
+| 1 | Initialize external sources | - |
+| 2 | Install toolchain dependencies | - |
+| 3 | Generate root TypeScript declarations | 2 |
+| 4 | Build utils from libphonenumber | 1, 2 |
+| 5 | Build root JS bundles needed by Angular | 3, 4 |
+| 6 | Build images and then CSS | 2 |
+| 7 | Build Angular package and demos | 5, 6 |
+
+## Minimal required packages
+
+### Dev dependencies
+
+| name | where | type |
+| --- | --- | --- |
+| `typescript` | shared root declaration generation required before Angular packaging, plus Angular TypeScript compilation | dev dependency |
+| `dts-bundle-generator` | shared root declaration generation required before Angular packaging | dev dependency |
+| `esbuild` | `scripts/esbuild.js`, `angular/build.js` | dev dependency |
+| `google-closure-compiler` | `scripts/build-utils.js` | dev dependency |
+| `google-closure-library` | `scripts/build-utils.js` | dev dependency |
+| `flag-icons` | shared sprite generation required by the Angular demos | dev dependency |
+| `sass` | shared CSS generation required by the Angular demos | dev dependency |
+| `clean-css-cli` | shared CSS minification required by the Angular demos | dev dependency |
+| `sharp` | shared sprite generation required by the Angular demos | dev dependency |
+| `bootstrap` | Bootstrap stylesheet package imported by `demo/src/demo.scss` for the shared demo CSS build | dev dependency |
+| `rimraf` | clean steps invoked by the shared Angular prerequisite builds and `npm run build:angular` | dev dependency |
+| `@angular/compiler-cli` | `npm run build:angular` | dev dependency |
+| `@angular/compiler` | `npm run build:angular` | dev dependency |
+| `@angular/platform-browser` | Angular demo `main.ts` entry files built by `npm run build:angular` | dev dependency |
+| `zone.js` | Angular demo `main.ts` entry files built by `npm run build:angular` | dev dependency |
+
+### Runtime dependencies
+
+| name | where | type |
+| --- | --- | --- |
+| `@angular/core` | `angular/src/IntlTelInput.ts`, `angular/demo/**/*.component.ts` | runtime dependency |
+| `@angular/forms` | `angular/src/IntlTelInput.ts`, `angular/demo/form/form.component.ts` | runtime dependency |
