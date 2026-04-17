@@ -167,7 +167,7 @@ So the Angular build always produces both files together; the difference is in t
 
 ## Angular step dependencies
 
-This is the Angular-focused dependency map using the step names from the **Generation and build processes** table earlier in this document. Some steps need more than one prerequisite, so `depends on` may list multiple IDs.
+This is the Angular-focused dependency map using the step names from the `purpose` column in the **Generation and build processes** table earlier in this document. Some steps need more than one prerequisite, so `depends on` may list multiple IDs.
 
 | ID | step | depends on |
 | --- | --- | --- |
@@ -203,7 +203,7 @@ This is the Angular-focused dependency map using the step names from the **Gener
 
 | name | where | type |
 | --- | --- | --- |
-| `@angular/core` | `angular/src/IntlTelInput.ts`, Angular demo components | runtime dependency |
+| `@angular/core` | `angular/src/IntlTelInput.ts`, `angular/demo/simple/simple.component.ts`, `angular/demo/validation/validation.component.ts`, `angular/demo/toggle-disabled/toggle-disabled.component.ts`, `angular/demo/set-number/set-number.component.ts`, `angular/demo/form/form.component.ts` | runtime dependency |
 | `@angular/forms` | `angular/src/IntlTelInput.ts`, `angular/demo/form/form.component.ts` | runtime dependency |
 | `@angular/platform-browser` | Angular demo `main.ts` files | runtime dependency |
 | `zone.js` | Angular demo `main.ts` files | runtime dependency |
