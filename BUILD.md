@@ -15,7 +15,7 @@ The submodule step is required for `third_party/libphonenumber`, which is used w
 
 | step | command | output | notes |
 | --- | --- | --- | --- |
-| Initialise external sources | `git submodule update --init --recursive` | `third_party/libphonenumber/**` | Required before any utils build or metadata check |
+| Initialize external sources | `git submodule update --init --recursive` | `third_party/libphonenumber/**` | Required before any utils build or metadata check |
 | Install toolchain dependencies | `npm install` | `node_modules/**` | Installs the npm packages used by the build scripts |
 | Generate flag sprite metadata and images | `npm run build:img:sprite` | `src/css/_metadata.scss`, `dist/img/**` | Implemented by `scripts/generate-sprite.js` |
 | Build package CSS | `npm run build:css:main` | `dist/css/intlTelInput.css`, `dist/css/intlTelInput-no-assets.css` | Builds the published stylesheets |
@@ -37,7 +37,7 @@ The submodule step is required for `third_party/libphonenumber`, which is used w
 
 | ID | step | depends on |
 | --- | --- | --- |
-| 1 | Initialise external sources | - |
+| 1 | Initialize external sources | - |
 | 2 | Install toolchain dependencies | - |
 | 3 | Generate flag sprite metadata and images | 2 |
 | 4 | Build package CSS | 3 |
