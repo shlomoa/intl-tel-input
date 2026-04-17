@@ -8,6 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const packageDir = __dirname;
 const repoRoot = path.resolve(packageDir, "../..");
 const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
+const npmExecPath = process.env.npm_execpath;
 const requiredTooling = [
   "node_modules/@angular/compiler-cli/package.json",
   "node_modules/esbuild/package.json",
@@ -23,6 +24,15 @@ function run(command, args, cwd = repoRoot) {
     env: process.env,
     stdio: "inherit",
   });
+}
+
+function runNpm(args, cwd = repoRoot) {
+  if (npmExecPath) {
+    run(process.execPath, [npmExecPath, ...args], cwd);
+    return;
+  }
+
+  run(npmCmd, args, cwd);
 }
 
 function relativeFromRoot(filePath) {
@@ -53,7 +63,7 @@ const steps = [
     run() {
       if (!allRequiredFilesExist(requiredTooling)) {
         console.log("Installing shared build dependencies with npm install...");
-        run(npmCmd, ["install"]);
+        runNpm(["install"]);
       }
 
       if (!allRequiredFilesExist(requiredSubmoduleFiles)) {
@@ -68,8 +78,8 @@ const steps = [
   {
     name: "Reset shared JS and Angular package outputs",
     run() {
-      run(npmCmd, ["--prefix", repoRoot, "run", "clean:dist:js"]);
-      run(npmCmd, ["--prefix", repoRoot, "run", "clean:angular"]);
+      runNpm(["--prefix", repoRoot, "run", "clean:dist:js"]);
+      runNpm(["--prefix", repoRoot, "run", "clean:angular"]);
     },
     validate() {
       assertMissing(this.name, [
@@ -84,7 +94,7 @@ const steps = [
   {
     name: "Generate root declarations required by Angular",
     run() {
-      run(npmCmd, ["--prefix", repoRoot, "run", "build:js:dts"]);
+      runNpm(["--prefix", repoRoot, "run", "build:js:dts"]);
     },
     validate() {
       assertExists(this.name, [
@@ -98,7 +108,7 @@ const steps = [
   {
     name: "Build utils runtime required by Angular with-utils entrypoint",
     run() {
-      run(npmCmd, ["--prefix", repoRoot, "run", "build:utils:closure"]);
+      runNpm(["--prefix", repoRoot, "run", "build:utils:closure"]);
     },
     validate() {
       assertExists(this.name, ["dist/js/utils.js"]);
@@ -107,7 +117,7 @@ const steps = [
   {
     name: "Build root JS bundles consumed by Angular sources",
     run() {
-      run(npmCmd, ["--prefix", repoRoot, "run", "build:js:core"]);
+      runNpm(["--prefix", repoRoot, "run", "build:js:core"]);
     },
     validate() {
       assertExists(this.name, [
@@ -120,7 +130,7 @@ const steps = [
   {
     name: "Compile Angular package sources",
     run() {
-      run(npmCmd, ["--prefix", repoRoot, "exec", "--", "ngc", "-p", "angular/tsconfig.json"]);
+      runNpm(["--prefix", repoRoot, "exec", "--", "ngc", "-p", "angular/tsconfig.json"]);
     },
     validate() {
       assertExists(this.name, [
