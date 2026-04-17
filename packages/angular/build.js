@@ -8,6 +8,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const packageDir = __dirname;
 const repoRoot = path.resolve(packageDir, "../..");
 const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
+const requiredTooling = [
+  "node_modules/@angular/compiler-cli/package.json",
+  "node_modules/esbuild/package.json",
+  "node_modules/google-closure-compiler/package.json",
+];
+const requiredSubmoduleFiles = [
+  "third_party/libphonenumber/javascript/i18n/phonenumbers/phonenumberutil.js",
+];
 
 function run(command, args, cwd = repoRoot) {
   execFileSync(command, args, {
@@ -19,6 +27,10 @@ function run(command, args, cwd = repoRoot) {
 
 function relativeFromRoot(filePath) {
   return path.relative(repoRoot, filePath).replaceAll(path.sep, "/");
+}
+
+function hasAll(relativePaths) {
+  return relativePaths.every((relativePath) => fs.existsSync(path.join(repoRoot, relativePath)));
 }
 
 function assertExists(stepName, relativePaths) {
@@ -37,15 +49,20 @@ function assertMissing(stepName, relativePaths) {
 
 const steps = [
   {
-    name: "Validate bootstrap prerequisites",
-    run() {},
+    name: "Bootstrap prerequisites",
+    run() {
+      if (!hasAll(requiredTooling)) {
+        console.log("Installing shared build dependencies with npm install...");
+        run(npmCmd, ["install"]);
+      }
+
+      if (!hasAll(requiredSubmoduleFiles)) {
+        console.log("Initializing required git submodules...");
+        run("git", ["submodule", "update", "--init", "--recursive"]);
+      }
+    },
     validate() {
-      assertExists(this.name, [
-        "node_modules/@angular/compiler-cli/package.json",
-        "node_modules/esbuild/package.json",
-        "node_modules/google-closure-compiler/package.json",
-        "third_party/libphonenumber/javascript/i18n/phonenumbers/phonenumberutil.js",
-      ]);
+      assertExists(this.name, [...requiredTooling, ...requiredSubmoduleFiles]);
     },
   },
   {

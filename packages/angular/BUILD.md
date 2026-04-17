@@ -12,23 +12,21 @@ From `packages/angular`, run:
 npm run build
 ```
 
-That command executes `build.js`, which runs the required build steps in order and validates the outputs after each step.
+That command executes `build.js`, which runs the required build steps in order, bootstraps missing prerequisites, and validates the outputs after each step.
 
-## Fresh clone bootstrap
+## Fresh clone behavior
 
-From the repository root:
+No manual root bootstrap steps are required before running `npm run build` in `packages/angular`.
 
-```sh
-git submodule update --init --recursive
-npm install
-```
+If prerequisites are missing, `build.js` bootstraps them automatically by running:
 
-Why these are still required:
+- `npm install` in the repository root when the shared build dependencies are missing
+- `git submodule update --init --recursive` in the repository root when `third_party/libphonenumber` has not been initialized yet
+
+Those prerequisites are still needed because:
 
 - `third_party/libphonenumber` is needed to build `dist/js/utils.js`
-- the build tools (`typescript`, `@angular/compiler-cli`, `esbuild`, `google-closure-compiler`, etc.) come from the root `node_modules`
-
-After that, the Angular package build is self-contained in `packages/angular`.
+- the build tools (`typescript`, `@angular/compiler-cli`, `esbuild`, `google-closure-compiler`, etc.) come from the shared root `node_modules`
 
 ## Atomic build steps
 
@@ -36,7 +34,7 @@ After that, the Angular package build is self-contained in `packages/angular`.
 
 | step | command used internally | required outputs validated before moving on |
 | --- | --- | --- |
-| Validate bootstrap prerequisites | no-op validation inside `build.js` | confirms `node_modules` contains the required build tools and `third_party/libphonenumber/javascript/i18n/phonenumbers/phonenumberutil.js` exists |
+| Bootstrap prerequisites | installs missing shared dependencies with `npm install` and initializes missing submodules with `git submodule update --init --recursive` | confirms `node_modules` contains the required build tools and `third_party/libphonenumber/javascript/i18n/phonenumbers/phonenumberutil.js` exists |
 | Reset shared JS and Angular package outputs | `npm --prefix ../.. run clean:dist:js` + `npm --prefix ../.. run clean:angular` | confirms old `dist/js/*` and `angular/dist/*` package outputs are gone |
 | Generate root declarations required by Angular | `npm --prefix ../.. run build:js:dts` | `dist/js/intlTelInput.d.ts`, `dist/js/data.d.ts`, `dist/js/i18n.d.ts`, `dist/js/utils.d.ts` |
 | Build utils runtime required by Angular with-utils entrypoint | `npm --prefix ../.. run build:utils:closure` | `dist/js/utils.js` |
@@ -48,7 +46,7 @@ After that, the Angular package build is self-contained in `packages/angular`.
 
 The steps above form this dependency chain:
 
-1. Validate bootstrap prerequisites
+1. Bootstrap prerequisites
 2. Reset shared JS and Angular package outputs
 3. Generate root declarations required by Angular
 4. Build utils runtime required by Angular with-utils entrypoint
