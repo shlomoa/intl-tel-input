@@ -165,7 +165,7 @@ There is no separate npm script per Angular entry point. The split is defined by
 
 So the Angular build always produces both files together; the difference is in the entry source and the runtime dependencies each one bundles.
 
-## Angular step dependencies
+## Angular build step dependencies
 
 This is the Angular-focused dependency map using the step names documented in the **Generation and build processes** section earlier in this document. Some steps need more than one prerequisite, so `depends on` may list multiple IDs.
 
