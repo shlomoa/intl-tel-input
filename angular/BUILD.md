@@ -185,17 +185,17 @@ This is the Angular-focused dependency map using the step names from the generat
 
 | name | where | type |
 | --- | --- | --- |
-| `typescript` | `npm run build:js:dts`, Angular TypeScript compilation | dev dependency |
-| `dts-bundle-generator` | `scripts/build-dts.js` | dev dependency |
+| `typescript` | shared root declaration generation required before Angular packaging, plus Angular TypeScript compilation | dev dependency |
+| `dts-bundle-generator` | shared root declaration generation required before Angular packaging | dev dependency |
 | `esbuild` | `scripts/esbuild.js`, `angular/build.js` | dev dependency |
 | `google-closure-compiler` | `scripts/build-utils.js` | dev dependency |
 | `google-closure-library` | `scripts/build-utils.js` | dev dependency |
-| `flag-icons` | `scripts/generate-sprite.js` | dev dependency |
-| `sass` | `npm run build:css:main`, `npm run build:css:demo` | dev dependency |
-| `clean-css-cli` | `npm run build:css:min` | dev dependency |
-| `sharp` | `scripts/generate-sprite.js` | dev dependency |
-| `bootstrap` | `npm run build:css:demo` | dev dependency |
-| `rimraf` | `npm run clean:*`, `npm run build:img`, `npm run build:angular` | dev dependency |
+| `flag-icons` | shared sprite generation required by the Angular demos | dev dependency |
+| `sass` | shared CSS generation required by the Angular demos | dev dependency |
+| `clean-css-cli` | shared CSS minification required by the Angular demos | dev dependency |
+| `sharp` | shared sprite generation required by the Angular demos | dev dependency |
+| `bootstrap` | shared demo stylesheet generation used by the Angular demos | dev dependency |
+| `rimraf` | clean steps invoked by the shared Angular prerequisite builds and `npm run build:angular` | dev dependency |
 | `@angular/compiler-cli` | `npm run build:angular` | dev dependency |
 | `@angular/compiler` | `npm run build:angular` | dev dependency |
 
