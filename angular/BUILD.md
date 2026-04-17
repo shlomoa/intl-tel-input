@@ -54,7 +54,7 @@ Both are compiled together by `ngc -p angular/tsconfig.json` and then bundled by
 
 | purpose | input | output | script | command | details |
 | --- | --- | --- | --- | --- | --- |
-| Initialise external sources | `.gitmodules`, remote `google/libphonenumber` repo | `third_party/libphonenumber/**` | n/a | `git submodule update --init --recursive` | Required before any utils build that reads libphonenumber files |
+| Initialize external sources | `.gitmodules`, remote `google/libphonenumber` repo | `third_party/libphonenumber/**` | n/a | `git submodule update --init --recursive` | Required before any utils build that reads libphonenumber files |
 | Install toolchain dependencies | `package.json`, `package-lock.json` | `node_modules/**` | n/a | `npm install` | Installs Angular, esbuild, sass, flag-icons, Closure Compiler, etc. |
 | Generate root TypeScript declarations | `src/js/intl-tel-input.ts`, `src/js/data.ts`, `src/js/i18n/index.ts`, `src/js/types/utils.d.ts`, `tsconfig.json` | `dist/js/intlTelInput.d.ts`, `dist/js/data.d.ts`, `dist/js/i18n.d.ts`, `dist/js/utils.d.ts` | `build:js:dts` | `npm run build:js:dts` | Implemented by `scripts/build-dts.js`; also used indirectly by `ensure:dts` |
 | Ensure root declarations exist | `dist/js/intlTelInput.d.ts` | existing or regenerated `dist/js/intlTelInput.d.ts` | `ensure:dts` | `npm run ensure:dts` | `build:angular` calls this first, but it does **not** build `dist/js/intlTelInput.mjs` |
