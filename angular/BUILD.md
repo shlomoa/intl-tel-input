@@ -164,3 +164,46 @@ There is no separate npm script per Angular entry point. The split is defined by
   - consumer import: `intl-tel-input/angularWithUtils`
 
 So the Angular build always produces both files together; the difference is in the entry source and the runtime dependencies each one bundles.
+
+## Angular step dependencies
+
+This is the Angular-focused dependency map using the step names from the generation/build tables above. Some steps need more than one prerequisite, so `depends on` may list multiple IDs.
+
+| ID | step | depends on |
+| --- | --- | --- |
+| 1 | Initialise external sources | - |
+| 2 | Install toolchain dependencies | - |
+| 3 | Generate root TypeScript declarations | 2 |
+| 4 | Build utils from libphonenumber | 1, 2 |
+| 5 | Build root JS bundles needed by Angular | 3, 4 |
+| 6 | Build images and then CSS | 2 |
+| 7 | Build Angular package and demos | 5, 6 |
+
+## Minimal required packages
+
+### Dev dependencies
+
+| name | where | type |
+| --- | --- | --- |
+| `typescript` | `npm run build:js:dts`, Angular TypeScript compilation | dev dependency |
+| `dts-bundle-generator` | `scripts/build-dts.js` | dev dependency |
+| `esbuild` | `scripts/esbuild.js`, `angular/build.js` | dev dependency |
+| `google-closure-compiler` | `scripts/build-utils.js` | dev dependency |
+| `google-closure-library` | `scripts/build-utils.js` | dev dependency |
+| `flag-icons` | `scripts/generate-sprite.js` | dev dependency |
+| `sass` | `npm run build:css:main`, `npm run build:css:demo` | dev dependency |
+| `clean-css-cli` | `npm run build:css:min` | dev dependency |
+| `sharp` | `scripts/generate-sprite.js` | dev dependency |
+| `bootstrap` | `npm run build:css:demo` | dev dependency |
+| `rimraf` | `npm run clean:*`, `npm run build:img`, `npm run build:angular` | dev dependency |
+| `@angular/compiler-cli` | `npm run build:angular` | dev dependency |
+| `@angular/compiler` | `npm run build:angular` | dev dependency |
+
+### Runtime dependencies
+
+| name | where | type |
+| --- | --- | --- |
+| `@angular/core` | `angular/src/IntlTelInput.ts`, Angular demo components | runtime dependency |
+| `@angular/forms` | `angular/src/IntlTelInput.ts`, `angular/demo/form/form.component.ts` | runtime dependency |
+| `@angular/platform-browser` | Angular demo `main.ts` files | runtime dependency |
+| `zone.js` | Angular demo `main.ts` files | runtime dependency |
