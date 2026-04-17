@@ -205,5 +205,5 @@ This is the Angular-focused dependency map using the step names from the `purpos
 
 | name | where | type |
 | --- | --- | --- |
-| `@angular/core` | Angular component source and Angular demo component files | runtime dependency |
+| `@angular/core` | `angular/src/IntlTelInput.ts`, `angular/demo/**/*.component.ts` | runtime dependency |
 | `@angular/forms` | `angular/src/IntlTelInput.ts`, `angular/demo/form/form.component.ts` | runtime dependency |
