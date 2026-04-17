@@ -171,7 +171,7 @@ This is the Angular-focused dependency map using the step names documented in th
 
 | ID | step | depends on |
 | --- | --- | --- |
-| 1 | Initialise external sources | - |
+| 1 | Initialize external sources | - |
 | 2 | Install toolchain dependencies | - |
 | 3 | Generate root TypeScript declarations | 2 |
 | 4 | Build utils from libphonenumber | 1, 2 |
