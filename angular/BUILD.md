@@ -167,7 +167,7 @@ So the Angular build always produces both files together; the difference is in t
 
 ## Angular step dependencies
 
-This is the Angular-focused dependency map using the step names from the generation/build tables above. Some steps need more than one prerequisite, so `depends on` may list multiple IDs.
+This is the Angular-focused dependency map using the step names from the **Generation and build processes** table earlier in this document. Some steps need more than one prerequisite, so `depends on` may list multiple IDs.
 
 | ID | step | depends on |
 | --- | --- | --- |
