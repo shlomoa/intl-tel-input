@@ -29,7 +29,7 @@ function relativeFromRoot(filePath) {
   return path.relative(repoRoot, filePath).replaceAll(path.sep, "/");
 }
 
-function hasAll(relativePaths) {
+function allRequiredFilesExist(relativePaths) {
   return relativePaths.every((relativePath) => fs.existsSync(path.join(repoRoot, relativePath)));
 }
 
@@ -51,12 +51,12 @@ const steps = [
   {
     name: "Bootstrap prerequisites",
     run() {
-      if (!hasAll(requiredTooling)) {
+      if (!allRequiredFilesExist(requiredTooling)) {
         console.log("Installing shared build dependencies with npm install...");
         run(npmCmd, ["install"]);
       }
 
-      if (!hasAll(requiredSubmoduleFiles)) {
+      if (!allRequiredFilesExist(requiredSubmoduleFiles)) {
         console.log("Initializing required git submodules...");
         run("git", ["submodule", "update", "--init", "--recursive"]);
       }
