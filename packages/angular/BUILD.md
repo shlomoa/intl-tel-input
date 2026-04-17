@@ -1,12 +1,12 @@
 # Separated Angular package build
 
-This guide documents the Angular-only build flow from `/home/runner/work/intl-tel-input/intl-tel-input/packages/angular`.
+This guide documents the Angular-only build flow from `packages/angular`.
 
-It is based on `/home/runner/work/intl-tel-input/intl-tel-input/angular/BUILD.md`, but wraps the required Angular prerequisites into a single package-local run so you do **not** need to execute any root build steps manually first.
+It is based on `angular/BUILD.md`, but wraps the required Angular prerequisites into a single package-local run so you do **not** need to execute any root build steps manually first.
 
 ## Single-run command
 
-From `/home/runner/work/intl-tel-input/intl-tel-input/packages/angular`, run:
+From `packages/angular`, run:
 
 ```sh
 npm run build
@@ -16,7 +16,7 @@ That command executes `build.js`, which runs the required build steps in order a
 
 ## Fresh clone bootstrap
 
-From `/home/runner/work/intl-tel-input/intl-tel-input`:
+From the repository root:
 
 ```sh
 git submodule update --init --recursive
@@ -28,7 +28,7 @@ Why these are still required:
 - `third_party/libphonenumber` is needed to build `dist/js/utils.js`
 - the build tools (`typescript`, `@angular/compiler-cli`, `esbuild`, `google-closure-compiler`, etc.) come from the root `node_modules`
 
-After that, the Angular package build is self-contained in `/home/runner/work/intl-tel-input/intl-tel-input/packages/angular`.
+After that, the Angular package build is self-contained in `packages/angular`.
 
 ## Atomic build steps
 
@@ -60,7 +60,7 @@ Each step is validated before the next step runs.
 
 ## Final package outputs
 
-The separated build produces the Angular package files in `/home/runner/work/intl-tel-input/intl-tel-input/angular/dist`:
+The separated build produces the Angular package files in `angular/dist`:
 
 - `IntlTelInput.js`
 - `IntlTelInput.d.ts`
