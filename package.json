@@ -46,6 +46,7 @@
     "build:react": "npm run ensure:dts && npm run clean:react && tsc -p react/tsconfig.json && node react/build.js",
     "build:vue": "npm run ensure:dts && npm run clean:vue && vite build --config vue/vite.config.mts",
     "build:angular": "npm run ensure:dts && npm run clean:angular && ngc -p angular/tsconfig.json && node angular/build.js",
+    "build:package:angular": "npm --prefix packages/angular run build",
     "build:components": "npm run build:react && npm run build:vue && npm run build:angular",
     "build": "npm run clean:all && npm run build:img && npm run build:translations:gen && npm run build:js",
     "build:test": "npm run build:jsfast:cmps && npm run test",
@@ -55,7 +56,8 @@
     "version:minor": "npm run build:test && npm run version:bump -- minor",
     "version:major": "npm run build:test && npm run version:bump -- major",
     "vue:demo": "vite --config vue/demo/vite.config.js vue/demo/${DEMO:-validation}",
-    "svelte:demo": "vite --config svelte/demo/vite.config.js svelte/demo/${DEMO:-validation}"
+    "svelte:demo": "vite --config svelte/demo/vite.config.js svelte/demo/${DEMO:-validation}",
+    "test:packages:angular": "npm --prefix packages/angular run validate"
   },
   "devDependencies": {
     "@angular/common": "^21.2.7",
