@@ -1,12 +1,32 @@
 // Builds src/js/utils.js with Closure Compiler: feeds it as JSON via stdin
 // (--json_streams IN), and passes the rest of the source list via --js flags.
 // Uses the native binary, no Java required.
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
 const Compiler = require('google-closure-compiler/lib/node/index.js').default;
 const { getNativeImagePath } = require('google-closure-compiler/lib/utils.js');
+const requiredLibphonenumberFile =
+  'third_party/libphonenumber/javascript/i18n/phonenumbers/phonenumberutil.js';
+
+if (!fs.existsSync(requiredLibphonenumberFile)) {
+  console.log('Initializing required git submodules...');
+  try {
+    execFileSync('git', ['submodule', 'update', '--init', '--recursive'], {
+      stdio: 'inherit',
+    });
+  } catch {
+    throw new Error(
+      `Failed to initialize ${requiredLibphonenumberFile}. Run "git submodule update --init --recursive" from the repository root and try again.`,
+    );
+  }
+}
+
+if (!fs.existsSync(requiredLibphonenumberFile)) {
+  throw new Error(`Missing required libphonenumber source: ${requiredLibphonenumberFile}`);
+}
 
 const entrySource = fs.readFileSync('src/js/utils.js', 'utf8');
 
